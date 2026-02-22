@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from enum import Enum
@@ -28,14 +28,13 @@ class UserLogin(BaseModel):
     password: str
 
 class UserOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     name: str
     email: str
     avatar_color: str
     bio: str
     created_at: datetime
-    class Config:
-        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
@@ -64,6 +63,7 @@ class ProjectUpdate(BaseModel):
     is_archived: Optional[bool] = None
 
 class ProjectOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     name: str
     description: str
@@ -71,24 +71,21 @@ class ProjectOut(BaseModel):
     emoji: str
     owner_id: int
     is_archived: bool
-    deadline: Optional[datetime]
+    deadline: Optional[datetime] = None
     created_at: datetime
     task_count: Optional[int] = 0
     completed_count: Optional[int] = 0
-    class Config:
-        orm_mode = True
 
 
 class SubtaskCreate(BaseModel):
     title: str
 
 class SubtaskOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
     is_done: bool
     created_at: datetime
-    class Config:
-        from_attributes = True
 
 class TaskCreate(BaseModel):
     title: str
@@ -112,32 +109,30 @@ class TaskUpdate(BaseModel):
     assignee_id: Optional[int] = None
 
 class CommentOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     content: str
     author: UserOut
     created_at: datetime
-    class Config:
-        orm_mode = True
 
 class TaskOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
     description: str
     priority: str
     status: str
     project_id: int
-    assignee_id: Optional[int]
-    due_date: Optional[datetime]
+    assignee_id: Optional[int] = None
+    due_date: Optional[datetime] = None
     estimated_hours: float
     actual_hours: float
     tags: str
     ai_score: float
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: Optional[datetime] = None
     subtasks: List[SubtaskOut] = []
     comments: List[CommentOut] = []
-    class Config:
-        orm_mode = True
 
 class CommentCreate(BaseModel):
     content: str
