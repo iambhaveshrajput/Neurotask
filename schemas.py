@@ -88,7 +88,7 @@ class SubtaskOut(BaseModel):
     is_done: bool
     created_at: datetime
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TaskCreate(BaseModel):
     title: str
