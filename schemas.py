@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime
 from enum import Enum
@@ -18,11 +18,10 @@ class StatusEnum(str, Enum):
     done = "done"
 
 
-# ── Auth ────────────────────────────────────────────────────────────────────
 class UserRegister(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100)
+    name: str
     email: EmailStr
-    password: str = Field(..., min_length=6)
+    password: str
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -35,7 +34,6 @@ class UserOut(BaseModel):
     avatar_color: str
     bio: str
     created_at: datetime
-
     class Config:
         orm_mode = True
 
@@ -50,9 +48,8 @@ class UserUpdate(BaseModel):
     avatar_color: Optional[str] = None
 
 
-# ── Project ─────────────────────────────────────────────────────────────────
 class ProjectCreate(BaseModel):
-    name: str = Field(..., min_length=1, max_length=150)
+    name: str
     description: Optional[str] = ""
     color: Optional[str] = "#6366f1"
     emoji: Optional[str] = "🚀"
@@ -78,29 +75,26 @@ class ProjectOut(BaseModel):
     created_at: datetime
     task_count: Optional[int] = 0
     completed_count: Optional[int] = 0
-
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
-# ── Task ─────────────────────────────────────────────────────────────────────
 class SubtaskCreate(BaseModel):
-    title: str = Field(..., min_length=1, max_length=200)
+    title: str
 
 class SubtaskOut(BaseModel):
     id: int
     title: str
     is_done: bool
     created_at: datetime
-
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class TaskCreate(BaseModel):
-    title: str = Field(..., min_length=1, max_length=200)
+    title: str
     description: Optional[str] = ""
-    priority: Optional[PriorityEnum] = PriorityEnum.medium
-    status: Optional[StatusEnum] = StatusEnum.todo
+    priority: Optional[str] = "medium"
+    status: Optional[str] = "todo"
     due_date: Optional[datetime] = None
     estimated_hours: Optional[float] = 0.0
     tags: Optional[str] = ""
@@ -109,8 +103,8 @@ class TaskCreate(BaseModel):
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    priority: Optional[PriorityEnum] = None
-    status: Optional[StatusEnum] = None
+    priority: Optional[str] = None
+    status: Optional[str] = None
     due_date: Optional[datetime] = None
     estimated_hours: Optional[float] = None
     actual_hours: Optional[float] = None
@@ -122,9 +116,8 @@ class CommentOut(BaseModel):
     content: str
     author: UserOut
     created_at: datetime
-
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class TaskOut(BaseModel):
     id: int
@@ -143,27 +136,8 @@ class TaskOut(BaseModel):
     updated_at: Optional[datetime]
     subtasks: List[SubtaskOut] = []
     comments: List[CommentOut] = []
-
     class Config:
-        from_attributes = True
+        orm_mode = True
 
-
-# ── Comment ──────────────────────────────────────────────────────────────────
 class CommentCreate(BaseModel):
-    content: str = Field(..., min_length=1)
-
-
-# ── Analytics ────────────────────────────────────────────────────────────────
-class AnalyticsOut(BaseModel):
-    total_projects: int
-    total_tasks: int
-    completed_tasks: int
-    in_progress_tasks: int
-    overdue_tasks: int
-    completion_rate: float
-    productivity_score: float
-    tasks_by_priority: dict
-    tasks_by_status: dict
-    recent_activity: List[dict]
-    weekly_completions: List[dict]
-    top_projects: List[dict]
+    content: str
