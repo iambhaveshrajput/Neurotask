@@ -643,7 +643,7 @@ async function renderDashboard() {
 
       <!-- Stats -->
       <div class="stats-grid">
-        <div class="stat-card" style="--card-color:#6366f1">
+        <div class="stat-card" style="--card-color:#6366f1; cursor:pointer" onclick="navigate('projects')">
           <div class="stat-icon">📁</div>
           <div class="stat-value">${analytics.total_projects}</div>
           <div class="stat-label">Active Projects</div>
